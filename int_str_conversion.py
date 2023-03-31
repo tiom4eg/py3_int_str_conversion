@@ -47,7 +47,7 @@ Let's do same Divide & Conquer as in int_to_str(), but we don't know bit length 
 def str_to_int(number: str) -> int:
     number = decimal.Decimal(number)
     cur_power = TWO ** 1024
-    if number <= current:
+    if number <= cur_power:
         return int(str(number))
     powers = []
     while cur_power <= number:
@@ -61,33 +61,41 @@ def str_to_int(number: str) -> int:
 
 def int_to_str_compare():
     import timeit, random
-    for d in range(10, 26):
+    for d in range(10, 28):
         x = (1 << (1 << d)) - 1
         start_time = timeit.default_timer()
         s = int_to_str(x)
         time_new = timeit.default_timer() - start_time
-        start_time = timeit.default_timer()
-        s = str(x)
-        time_old = timeit.default_timer() - start_time
-        print(f"{1 << d}: {time_new} vs {time_old}, {time_old/time_new}x speedup")
-        
+        print(f"n = 2^{1 << d} - 1")
+        print(f"Время выполнения int_to_str(): {time_new:.3f} секунд")
+        if d < 24:
+            start_time = timeit.default_timer()
+            s = str(x)
+            time_old = timeit.default_timer() - start_time
+            print(f"Время выполнения str(): {time_old:.3f} секунд")
+            print(f"Коэффициент оптимизации: {time_old/time_new:.3f}")
+        else:
+            print(f"Время выполнения str(): слишком долго :)")
 
 def str_to_int_compare():
     import timeit, random
     for d in range(10, 25):
-        x = ''.join(random.choices('123456789', k=(1 << d)))
+        x = '1' + '0' * (1 << d)
         start_time = timeit.default_timer()
         s = str_to_int(x)
         time_new = timeit.default_timer() - start_time
-        start_time = timeit.default_timer()
-        s = int(x)
-        time_old = timeit.default_timer() - start_time
-        print(f"{1 << d}: {time_new} vs {time_old}, {time_old/time_new}x speedup")
+        print(f"n = 10^{1 << d}")
+        print(f"Время выполнения str_to_int(): {time_new:.3f} секунд")
+        if d < 23:
+            start_time = timeit.default_timer()
+            s = int(x)
+            time_old = timeit.default_timer() - start_time
+            print(f"Время выполнения int(): {time_old:.3f} секунд")
+            print(f"Коэффициент оптимизации: {time_old/time_new:.3f}")
+        else:
+            print(f"Время выполнения int(): слишком долго :)")
 
 #print("int_to_str() vs int()")
 #int_to_str_compare()
 #print("str_to_int() vs str()")
 #str_to_int_compare()
-
-    
-
